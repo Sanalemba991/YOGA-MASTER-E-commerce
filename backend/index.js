@@ -3,7 +3,7 @@ const app = express()
 const port = 3004
 
 app.get('/', (req, res) => {
-  res.send('Backend Start')
+  res.send('Rom Start')
 })
 
 app.listen(port, () => {
