@@ -1,12 +1,14 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
+require('dotenv').config();
 const port = process.env.PORT || 4000;
 
-// laitonjamsanalembameitei99
-//jhSzk7Q881b7RMAO
+
+
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
-const uri = "mongodb+srv://laitonjamsanalembameitei99:jhSzk7Q881b7RMAO@yoga-master.mc6jh.mongodb.net/?retryWrites=true&w=majority&appName=yoga-master";
+// Use environment variables in the connection string
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@yoga-master.mc6jh.mongodb.net/?retryWrites=true&w=majority&appName=yoga-master`;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -21,6 +23,8 @@ async function run() {
     await client.connect();
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
   } finally {
     await client.close();
   }
@@ -28,9 +32,9 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-  res.send('Rom Start')
-})
+  res.send('Rom Start');
+});
 
 app.listen(port, () => {
-  console.log(`app listening on port ${port}`)
-})
+  console.log(`App listening on port ${port}`);
+});
