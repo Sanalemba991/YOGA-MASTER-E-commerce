@@ -21,6 +21,19 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
+    //creating a new database and collection
+    const database = client.db("yoga-master"); // Replace with your database name
+    const userCollection = database.collection("users"); 
+    const classesCollection = database.collection("classes");// Replace with your collection name
+    const cartCollection = database.collection("cart");
+    const paymentCollection = database.collection("payments");
+    const enrolledCollection = database.collection("enrolled");
+    const appliedCollection = database.collection("applied");
+
+    //classes routes here
+    
+
+
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } catch (error) {
