@@ -29,7 +29,7 @@ async function run() {
     const paymentCollection = database.collection("payments");
     const enrolledCollection = database.collection("enrolled");
     const appliedCollection = database.collection("applied");
-    const appliedCollection = database.collection("applied");
+
 
     //classes routes here
     
