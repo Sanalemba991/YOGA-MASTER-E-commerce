@@ -42,6 +42,16 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/classes', async (req, res) => {
+      try {
+        const query = { status: "approved" };
+        const result = await classesCollection.find(query).toArray();
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: 'An error occurred while fetching classes.' });
+      }
+    });
+    
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } catch (error) {
@@ -54,7 +64,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-  res.send('Rom Start');
+  res.send('');
 });
 
 app.listen(port, () => {
