@@ -24,36 +24,33 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const database = client.db("yoga-master"); // Replace with your database name
-    const userCollection = database.collection("users");
-    const classesCollection = database.collection("classes"); // Replace with your collection name
-    const cartCollection = database.collection("cart");
-    const paymentCollection = database.collection("payments");
-    const enrolledCollection = database.collection("enrolled");
-    const appliedCollection = database.collection("applied");
+    const database = client.db("yoga-master"); // Your database name
+    const classesCollection = database.collection("classes"); // Your collection name
 
-    // Classes routes here
+    // Create a new class
     app.post("/new-class", async (req, res) => {
-      const newClass = req.body;
-      // Uncomment if you need to convert availableSeats to an integer
-      // newClass.availableSeats = parseInt(newClass.availableSeats);
-
-      const result = await classesCollection.insertOne(newClass);
-      res.send(result);
+      try {
+        const newClass = req.body;
+        const result = await classesCollection.insertOne(newClass);
+        res.status(201).send(result);
+      } catch (error) {
+        console.error("Error creating new class:", error);
+        res.status(500).send({ message: "Internal Server Error" });
+      }
     });
 
+    // Get all approved classes
     app.get("/classes", async (req, res) => {
       try {
         const query = { status: "approved" };
         const result = await classesCollection.find(query).toArray();
         res.send(result);
       } catch (error) {
-        res
-          .status(500)
-          .send({ error: "An error occurred while fetching classes." });
+        res.status(500).send({ error: "An error occurred while fetching classes." });
       }
     });
-    //get classes by instructor email address
+
+    // Get classes by instructor email
     app.get("/classes/:email", async (req, res) => {
       const email = req.params.email;
       const query = { instructorEmail: email };
@@ -67,24 +64,24 @@ async function run() {
       }
     });
 
-    //manage classes
-    app.get('/classes-manage',async(res,req)=>{
-const result=await classesCollection.find().toArray();
-res.send(result);
-
-    })
+    // Manage classes
+    app.get("/classes-manage", async (req, res) => {
+      try {
+        const result = await classesCollection.find().toArray();
+        res.send(result);
+      } catch (error) {
+        console.error("Error fetching classes:", error);
+        res.status(500).send({ message: "Internal Server Error" });
+      }
+    });
 
     await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-  } finally {
-    // You might want to avoid closing the client here
-    // await client.close(); // Keep the connection open for future requests
   }
 }
+
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
