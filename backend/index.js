@@ -62,6 +62,7 @@ app.get('/classes/:email', async (req, res) => {
   } catch (error) {
     console.error('Error fetching classes:', error);
     res.status(500).send({ message: 'Internal Server Error' });
+    ok
   }
 });
 
