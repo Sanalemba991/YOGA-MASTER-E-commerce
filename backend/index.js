@@ -51,6 +51,19 @@ async function run() {
         res.status(500).send({ error: 'An error occurred while fetching classes.' });
       }
     });
+    //get classes by instructor email address
+    app.get('/classes/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { instructorEmail: email };
+    
+      try {
+        const result = await classesCollection.find(query).toArray();
+        res.status(200).send(result);
+      } catch (error) {
+        console.error('Error fetching classes:', error);
+        res.status(500).send({ message: 'Internal Server Error' });
+      }
+    });
     
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
